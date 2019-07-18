@@ -1,5 +1,5 @@
 import React from 'react'
-import {Chart, Geom, Axis, Tooltip, Legend, Coord} from 'bizcharts'
+import G2 from '@antv/g2'
 
 // 定义度量
 const cols = {
@@ -9,30 +9,47 @@ const cols = {
 
 
 class Histogram extends React.Component {
-
-    componentWillMount() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            chart: null
+        }
     }
 
     render() {
         return (
-            <>
-                <div style={{
-                    marginTop: '20px', background: '#fff', width: '650px',
-                    paddingTop: '30px'
-                }}>
-                    <div style={{marginLeft: '50px', paddingBottom: '30px', fontSize: '22px'}}>
-                        {this.props.city}市各行业需求量
-                    </div>
-                    <Chart width={600} height={400} data={this.props.data} scale={cols}>
-                        <Axis name="industry" title/>
-                        <Axis name="num" title/>
-                        <Legend position="top" dy={-20}/>
-                        <Tooltip/>
-                        <Geom type="interval" position="industry*num" color="industry"/>
-                    </Chart>
+            <div style={{background: '#fff', width: '620px', marginTop: '20px'}}>
+                <div>
+                    {/*城市行业需求*/}
                 </div>
-            </>
+                <div id={'histogram'}>
+
+                </div>
+            </div>
+
         )
+    }
+
+    componentDidMount() {
+        const chart = new G2.Chart({
+            container: 'histogram',
+            width: 600,
+            height: 400,
+            padding: [20, 20, 95, 80]
+        });
+        chart.source(this.props.data);
+        chart.scale('num', {
+        });
+        chart.interval().position('industry*num').color('industry');
+        chart.render();
+        this.setState({
+            chart: chart
+        })
+    }
+
+    componentWillUpdate(nextProps, nextState, nextContext) {
+        if (this.state.chart)
+            this.state.chart.changeData(nextProps.data)
     }
 }
 
