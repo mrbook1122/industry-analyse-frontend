@@ -1,108 +1,110 @@
 import React from 'react'
-
-import {
-    Chart, Geom,
-    Axis, Tooltip, Coord, Label, Legend,
-    Guide
-} from "bizcharts";
-import DataSet from "@antv/data-set";
+import G2 from '@antv/g2'
+import {Row, Col} from 'antd'
+import './donut.css'
 
 class Donut extends React.Component {
-    render() {
-        const {DataView} = DataSet;
-        const {Html} = Guide;
-        const data = [
-            {
-                item: "事例一",
-                count: 40
-            },
-            {
-                item: "事例二",
-                count: 21
-            },
-            {
-                item: "事例三",
-                count: 17
-            },
-            {
-                item: "事例四",
-                count: 13
-            },
-            {
-                item: "事例五",
-                count: 9
-            }
-        ];
-        const dv = new DataView();
-        dv.source(data).transform({
-            type: "percent",
-            field: "count",
-            dimension: "item",
-            as: "percent"
+    constructor(props) {
+        super(props);
+        this.state = {
+            chart: null
+        }
+    }
+
+
+    componentDidMount() {
+        var chart = new G2.Chart({
+            container: 'donut',
+            forceFit: true,
+            height: 350,
+            padding: [0, 0, 0, 0]
         });
-        const cols = {
-            percent: {
-                formatter: val => {
-                    val = val * 100 + "%";
-                    return val;
-                }
+        chart.source(this.props.data);
+        chart.coord('theta', {
+            radius: 0.75,
+            innerRadius: 0.7
+        });
+        chart.tooltip({
+            showTitle: false,
+            itemTpl: '<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+        });
+        var city = this.props.city
+        chart.guide().html({
+            position: ['50%', '50%'],
+            htmlContent: '<div style="width: 100px;height: 50px;vertical-align: middle ;' +
+                'text-align: center ;line-height: 0.2;">' +
+                '<p style="font-size: 22px;color: #8c8c8c;font-weight: 300;">' +
+                '地区</p><p style="font-size: 32px;color: #000;font-weight: bold;">'+city+'</p></div>'
+        })
+        chart.legend(false)
+        chart.intervalStack().position('num').color('industry').tooltip('industry*percent', function (item, percent) {
+            return {
+                name: item,
+                value: percent
             }
-        };
+        }).style({
+            lineWidth: '3',
+            stroke: '#fff'
+        })
+        chart.render();
+        this.setState({
+            chart: chart
+        })
+    }
+
+    componentWillUpdate(nextProps, nextState, nextContext) {
+        if (this.state.chart) {
+            this.state.chart.clear()
+            this.state.chart.intervalStack().position('num').color('industry').tooltip('industry*percent', function (item, percent) {
+                return {
+                    name: item,
+                    value: percent
+                }
+            }).style({
+                lineWidth: '3',
+                stroke: '#fff'
+            })
+            this.state.chart.guide().html({
+                position: ['50%', '50%'],
+                htmlContent: '<div style="width: 100px;height: 50px;vertical-align: middle ;' +
+                    'text-align: center ;line-height: 0.2;">' +
+                    '<p style="font-size: 22px;color: #8c8c8c;font-weight: 300;">' +
+                    '地区</p><p style="font-size: 32px;color: #000;font-weight: bold;">' + nextProps.city + '</p></div>'
+            })
+            // this.state.chart.source(nextProps.data)
+            this.state.chart.changeData(nextProps.data)
+        }
+
+    }
+
+    render() {
+        const list = this.props.data.map((item, index) => (
+            <div className="item" key={index}>
+                <span className={'dot ' + 'dot_' + (index + 1)}></span>
+                <span className="describe">{item.industry}</span>
+                <span className="percent">{item.percent}</span>
+                <span className="price">{item.num}</span>
+            </div>
+        ))
         return (
-            <div>
-                <Chart
-                    height={600}
-                    data={dv}
-                    scale={cols}
-                    padding={[80, 100, 80, 80]}
-                    forceFit
-                >
-                    <Coord type={"theta"} radius={0.75} innerRadius={0.6}/>
-                    <Axis name="percent"/>
-                    <Legend
-                        position="right"
-                        offsetY={-window.innerHeight / 2 + 120}
-                        offsetX={-100}
-                    />
-                    <Tooltip
-                        showTitle={false}
-                        itemTpl="<li><span style=&quot;background-color:{color};&quot; class=&quot;g2-tooltip-marker&quot;></span>{name}: {value}</li>"
-                    />
-                    <Guide>
-                        <Html
-                            position={["50%", "50%"]}
-                            html="<div style=&quot;color:#8c8c8c;font-size:1.16em;text-align: center;width: 10em;&quot;>主机<br><span style=&quot;color:#262626;font-size:2.5em&quot;>200</span>台</div>"
-                            alignX="middle"
-                            alignY="middle"
-                        />
-                    </Guide>
-                    <Geom
-                        type="intervalStack"
-                        position="percent"
-                        color="item"
-                        tooltip={[
-                            "item*percent",
-                            (item, percent) => {
-                                percent = percent * 100 + "%";
-                                return {
-                                    name: item,
-                                    value: percent
-                                };
-                            }
-                        ]}
-                        style={{
-                            lineWidth: 1,
-                            stroke: "#fff"
-                        }}
-                    >
-                        <Label
-                            content="percent"
-                            formatter={(val, item) => {
-                                return item.point.item + ": " + val;
-                            }}
-                        />
-                    </Geom>
-                </Chart>
+            <div style={{background: 'white', marginTop: '20px', paddingRight: '30px', height: '500px', width: '100%'}}>
+                <Row>
+                    <div>
+                        <div style={{marginLeft: '20px', padding: '20px', fontSize: '25px'}}>
+                            {this.props.city}市各行业需求量占比
+                        </div>
+                    </div>
+                </Row>
+                <Row style={{marginTop:'25px'}} type={'flex'} align={'middle'}>
+                    <Col span={14}>
+                        <div id={'donut'} style={{marginLeft: '10px'}}>
+                        </div>
+                    </Col>
+
+                    <Col span={10}>
+                        {list}
+                    </Col>
+                </Row>
             </div>
         );
     }
