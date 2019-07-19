@@ -1,5 +1,5 @@
 import React from 'react'
-import {Cascader, Row, Col} from 'antd'
+import {Cascader, Row, Col, Select, Radio} from 'antd'
 
 import axios from 'axios'
 
@@ -7,6 +7,7 @@ import axios from 'axios'
 
 const Histogram = React.lazy(() => import('./histogram'))
 const Donut = React.lazy(() => import('./donut'))
+const PolyLine = React.lazy(() => import('./polyline'))
 
 const url = 'http://localhost:8080'
 
@@ -35,7 +36,9 @@ class Area extends React.Component {
         this.state = {
             currentCity: '成都',
             data: [],
-            donutData: []
+            donutData: [],
+            polyData: [],
+            currentIndustry: '互联网'
         }
         this.changeCity = this.changeCity.bind(this)
     }
@@ -81,19 +84,32 @@ class Area extends React.Component {
                 donutData: newData
             })
         })
+        axios.get(url + '/industry/time', {
+            params: {
+                city: this.state.currentCity,
+                industry: this.state.currentIndustry
+            }
+        }).then((resp) => {
+            this.setState({
+                polyData: resp.data
+            })
+        })
     }
 
 
     render() {
+        const industrySelect = this.state.data.map((item, index) => (
+            <Radio.Button value={item.industry} key={index}>{item.industry}</Radio.Button>
+        ))
         return (
             <div>
                 <div style={{marginLeft: '20px', marginRight: '20px'}}>
                     <Cascader defaultValue={['四川', '成都']}
                               options={cityList} onChange={this.changeCity}/>
 
-                            <div style={{marginLeft: '15px', display: 'inline-block', fontSize: '18px'}}>
-                                当前城市: {this.state.currentCity}
-                            </div>
+                    <div style={{marginLeft: '15px', display: 'inline-block', fontSize: '18px'}}>
+                        当前城市: {this.state.currentCity}
+                    </div>
                     <Row gutter={20}>
                         <Col span={12}>
                             <React.Suspense fallback={null}>
@@ -104,6 +120,28 @@ class Area extends React.Component {
                             <React.Suspense fallback={null}>
                                 <Donut city={this.state.currentCity} data={this.state.donutData}/>
                             </React.Suspense>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <div style={{height: '560px', marginTop: '20px'}}>
+                                <div style={{background: '#fff'}}>
+                                    <div style={{
+                                        padding: '20px 20px 0 40px', fontSize: '25px'
+                                    }}>
+                                        {this.state.currentCity}市{this.state.currentIndustry}行业需求量变化折线图
+                                    </div>
+                                    <div style={{float: 'right', marginTop: '-30px', marginRight: '20px'}}>
+                                        <Radio.Group>
+                                            {industrySelect}
+                                        </Radio.Group>
+                                    </div>
+                                </div>
+                                <React.Suspense fallback={null}>
+                                    <PolyLine city={this.state.currentCity} data={this.state.polyData}/>
+                                </React.Suspense>
+
+                            </div>
                         </Col>
                     </Row>
                 </div>
