@@ -87,7 +87,7 @@ class Donut extends React.Component {
             </div>
         ))
         return (
-            <div style={{background: 'white', marginTop: '20px', paddingRight: '30px', height: '500px', width: '100%'}}>
+            <div style={{background: 'white', marginTop: '20px', paddingRight: '30px', height: '450px', width: '100%'}}>
                 <Row>
                     <div>
                         <div style={{marginLeft: '20px', padding: '20px', fontSize: '25px'}}>
@@ -95,7 +95,7 @@ class Donut extends React.Component {
                         </div>
                     </div>
                 </Row>
-                <Row style={{marginTop:'25px'}} type={'flex'} align={'middle'}>
+                <Row style={{marginTop:'10px'}} type={'flex'} align={'middle'}>
                     <Col span={14}>
                         <div id={'donut'} style={{marginLeft: '10px'}}>
                         </div>

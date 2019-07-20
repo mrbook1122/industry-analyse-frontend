@@ -18,11 +18,11 @@ class Histogram extends React.Component {
 
     render() {
         return (
-            <div style={{background: '#fff',height:'500px' ,width: '100%', marginTop: '20px'}}>
+            <div style={{background: '#fff',height:'450px' ,width: '100%', marginTop: '20px'}}>
                 <div style={{marginLeft: '20px', padding: '20px', fontSize: '25px'}}>
                     {this.props.city}市各行业需求量柱状图
                 </div>
-                <div id={'histogram'}>
+                <div id={'histogram'} style={{marginTop: '30px'}}>
 
                 </div>
             </div>
@@ -34,7 +34,7 @@ class Histogram extends React.Component {
         const chart = new G2.Chart({
             container: 'histogram',
             forceFit: true,
-            height: 400,
+            height: 300,
             padding: [20, 20, 95, 80]
         });
         chart.source(this.props.data);

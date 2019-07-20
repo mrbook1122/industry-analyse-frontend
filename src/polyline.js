@@ -18,6 +18,7 @@ class PolyLine extends React.Component {
         })
         chart.source(this.props.data)
         chart.scale('num', {
+            alias: '需求量'
         });
         chart.scale('year', {
             range: [0, 1]

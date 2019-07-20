@@ -1,9 +1,12 @@
 import React from 'react'
 import ReactDom from 'react-dom'
+import {HashRouter as Router, Route, Link} from 'react-router-dom'
 
 import {Layout, Icon, Menu} from 'antd'
 
 import Area from './area'
+import All from './all'
+import ResultList from './list'
 
 const {Header, Sider, Content} = Layout
 
@@ -36,44 +39,56 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <Layout style={{minHeight: '100vh'}}>
-                    <Sider collapsible trigger={null} collapsed={this.state.collapsed}>
-                        {/*logo*/}
-                        <div style={{
-                            height: '32px', background: 'rgba(255, 255, 255, 0.2)',
-                            margin: '16px'
-                        }}>
-                        </div>
-                        {/*menu*/}
-                        <Menu theme={'dark'} defaultSelectedKeys={['1']}>
-                            <Menu.Item key={1}>
-                                <CityIcon style={{color: '#fff'}}/>
-                                <span>地区</span>
-                            </Menu.Item>
-                            <Menu.Item key={2}>
-                                <Icon type="user"/>
-                                <span>nav 1</span>
-                            </Menu.Item>
-                        </Menu>
-                    </Sider>
-                    <Layout>
-                        <Header style={{background: '#fff', padding: '0'}}>
-                            <Icon
-                                style={{
-                                    fontSize: '18px', lineHeight: '64px', padding: '0 24px',
-                                    transition: 'color 0.3s'
-                                }}
-                                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                                onClick={this.toggle}
-                            />
-                        </Header>
-                        <Content>
-                            <div style={{marginLeft: '20px', marginTop: '20px'}}>
-                                <Area/>
+                <Router>
+                    <Layout style={{minHeight: '100vh'}}>
+                        <Sider collapsible trigger={null} collapsed={this.state.collapsed}>
+                            {/*logo*/}
+                            <div style={{
+                                height: '32px', background: 'rgba(255, 255, 255, 0.2)',
+                                margin: '16px'
+                            }}>
                             </div>
-                        </Content>
+                            {/*menu*/}
+                            <Menu theme={'dark'} defaultSelectedKeys={['1']}>
+
+                                <Menu.Item key={1}>
+                                    <CityIcon style={{color: '#fff'}}/>
+                                    <span>地区</span>
+                                    <Link to={'/'}/>
+                                </Menu.Item>
+                                <Menu.Item key={2}>
+                                    <Icon type="user"/>
+                                    <span>nav 1</span>
+                                    <Link to={'/all'}/>
+                                </Menu.Item>
+                                <Menu.Item key={3}>
+                                    <Icon type={'user'}/>
+                                    <span>列表</span>
+                                    <Link to={'/list'}/>
+                                </Menu.Item>
+                            </Menu>
+                        </Sider>
+                        <Layout>
+                            <Header style={{background: '#fff', padding: '0'}}>
+                                <Icon
+                                    style={{
+                                        fontSize: '18px', lineHeight: '64px', padding: '0 24px',
+                                        transition: 'color 0.3s'
+                                    }}
+                                    type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                                    onClick={this.toggle}
+                                />
+                            </Header>
+                            <Content>
+                                <div style={{marginLeft: '20px', marginTop: '20px'}}>
+                                    <Route path={'/'} exact component={Area}/>
+                                    <Route path={'/all'} component={All}/>
+                                    <Route path={'/list'} component={ResultList}/>
+                                </div>
+                            </Content>
+                        </Layout>
                     </Layout>
-                </Layout>
+                </Router>
             </div>
         )
     }

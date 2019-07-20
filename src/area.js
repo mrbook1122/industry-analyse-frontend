@@ -43,16 +43,32 @@ class Area extends React.Component {
         this.changeCity = this.changeCity.bind(this)
     }
 
+    selectIndustry = e => {
+        const industry = e.target.value
+        axios.get(url + '/industry/time', {
+            params: {
+                city: this.state.currentCity,
+                industry: industry
+            }
+        }).then((resp) => {
+
+            this.setState({
+                currentIndustry: industry,
+                polyData: resp.data
+            })
+        })
+    }
+
     changeCity(value) {
         axios.get(url + '/industry/num', {
             params: {
                 city: value[1]
             }
         }).then((resp) => {
-            var total = 0
+            let total = 0
             for (let i = 0; i < resp.data.length; i++)
                 total += resp.data[i].num
-            var newData = resp.data.map(function (item) {
+            let newData = resp.data.map(function (item) {
                 let a = (item.num / total * 100).toFixed(1) + '%'
                 item.percent = a
                 return item
@@ -63,6 +79,16 @@ class Area extends React.Component {
                 donutData: newData
             })
         })
+        axios.get(url + '/industry/time', {
+            params: {
+                city: value[1],
+                industry: this.state.currentIndustry
+            }
+        }).then((resp) => {
+            this.setState({
+                polyData: resp.data
+            })
+        })
     }
 
     componentWillMount() {
@@ -71,10 +97,10 @@ class Area extends React.Component {
                 city: this.state.currentCity
             }
         }).then((resp) => {
-            var total = 0
+            let total = 0
             for (let i = 0; i < resp.data.length; i++)
                 total += resp.data[i].num
-            var newData = resp.data.map(function (item) {
+            let newData = resp.data.map(function (item) {
                 let a = (item.num / total * 100).toFixed(1) + '%'
                 item.percent = a
                 return item
@@ -101,6 +127,9 @@ class Area extends React.Component {
         const industrySelect = this.state.data.map((item, index) => (
             <Radio.Button value={item.industry} key={index}>{item.industry}</Radio.Button>
         ))
+        let defaultSelect = ''
+        if (this.state.data[0])
+            defaultSelect = this.state.data[0].industry
         return (
             <div>
                 <div style={{marginLeft: '20px', marginRight: '20px'}}>
@@ -110,7 +139,7 @@ class Area extends React.Component {
                     <div style={{marginLeft: '15px', display: 'inline-block', fontSize: '18px'}}>
                         当前城市: {this.state.currentCity}
                     </div>
-                    <Row gutter={20}>
+                    <Row gutter={20} type={'flex'} align={'middle'}>
                         <Col span={12}>
                             <React.Suspense fallback={null}>
                                 <Histogram city={this.state.currentCity} data={this.state.data}/>
@@ -132,7 +161,7 @@ class Area extends React.Component {
                                         {this.state.currentCity}市{this.state.currentIndustry}行业需求量变化折线图
                                     </div>
                                     <div style={{float: 'right', marginTop: '-30px', marginRight: '20px'}}>
-                                        <Radio.Group>
+                                        <Radio.Group value={this.state.currentIndustry} onChange={this.selectIndustry}>
                                             {industrySelect}
                                         </Radio.Group>
                                     </div>
