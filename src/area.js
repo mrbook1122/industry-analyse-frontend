@@ -35,8 +35,6 @@ class Area extends React.Component {
         super(props);
         this.state = {
             currentCity: '成都',
-            data: [],
-            donutData: [],
             polyData: [],
             currentIndustry: '互联网'
         }
@@ -60,25 +58,6 @@ class Area extends React.Component {
     }
 
     changeCity(value) {
-        axios.get(url + '/industry/num', {
-            params: {
-                city: value[1]
-            }
-        }).then((resp) => {
-            let total = 0
-            for (let i = 0; i < resp.data.length; i++)
-                total += resp.data[i].num
-            let newData = resp.data.map(function (item) {
-                let a = (item.num / total * 100).toFixed(1) + '%'
-                item.percent = a
-                return item
-            })
-            this.setState({
-                data: resp.data,
-                currentCity: value[1],
-                donutData: newData
-            })
-        })
         axios.get(url + '/industry/time', {
             params: {
                 city: value[1],
@@ -86,30 +65,13 @@ class Area extends React.Component {
             }
         }).then((resp) => {
             this.setState({
-                polyData: resp.data
+                polyData: resp.data,
+                currentCity: value[1]
             })
         })
     }
 
-    componentWillMount() {
-        axios.get(url + '/industry/num', {
-            params: {
-                city: this.state.currentCity
-            }
-        }).then((resp) => {
-            let total = 0
-            for (let i = 0; i < resp.data.length; i++)
-                total += resp.data[i].num
-            let newData = resp.data.map(function (item) {
-                let a = (item.num / total * 100).toFixed(1) + '%'
-                item.percent = a
-                return item
-            })
-            this.setState({
-                data: resp.data,
-                donutData: newData
-            })
-        })
+    componentDidMount() {
         axios.get(url + '/industry/time', {
             params: {
                 city: this.state.currentCity,
@@ -124,12 +86,12 @@ class Area extends React.Component {
 
 
     render() {
-        const industrySelect = this.state.data.map((item, index) => (
-            <Radio.Button value={item.industry} key={index}>{item.industry}</Radio.Button>
-        ))
-        let defaultSelect = ''
-        if (this.state.data[0])
-            defaultSelect = this.state.data[0].industry
+        // const industrySelect = this.state.data.map((item, index) => (
+        //     <Radio.Button value={item.industry} key={index}>{item.industry}</Radio.Button>
+        // ))
+        // let defaultSelect = ''
+        // if (this.state.data[0])
+        //     defaultSelect = this.state.data[0].industry
         return (
             <div>
                 <div style={{marginLeft: '20px', marginRight: '20px'}}>
@@ -161,9 +123,9 @@ class Area extends React.Component {
                                         {this.state.currentCity}市{this.state.currentIndustry}行业需求量变化折线图
                                     </div>
                                     <div style={{float: 'right', marginTop: '-30px', marginRight: '20px'}}>
-                                        <Radio.Group value={this.state.currentIndustry} onChange={this.selectIndustry}>
-                                            {industrySelect}
-                                        </Radio.Group>
+                                        {/*<Radio.Group value={this.state.currentIndustry} onChange={this.selectIndustry}>*/}
+                                        {/*    {industrySelect}*/}
+                                        {/*</Radio.Group>*/}
                                     </div>
                                 </div>
                                 <React.Suspense fallback={null}>

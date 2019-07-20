@@ -1,61 +1,52 @@
 import React from 'react'
 import G2 from '@antv/g2'
 import {Row, Col} from 'antd'
+import axios from 'axios'
 import './donut.css'
+
+const url = 'http://localhost:8080/'
 
 class Donut extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            chart: null
+            chart: null,
+            data: []
         }
     }
 
 
     componentDidMount() {
-        var chart = new G2.Chart({
-            container: 'donut',
-            forceFit: true,
-            height: 350,
-            padding: [0, 0, 0, 0]
-        });
-        chart.source(this.props.data);
-        chart.coord('theta', {
-            radius: 0.75,
-            innerRadius: 0.7
-        });
-        chart.tooltip({
-            showTitle: false,
-            itemTpl: '<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
-        });
-        var city = this.props.city
-        chart.guide().html({
-            position: ['50%', '50%'],
-            htmlContent: '<div style="width: 100px;height: 50px;vertical-align: middle ;' +
-                'text-align: center ;line-height: 0.2;">' +
-                '<p style="font-size: 22px;color: #8c8c8c;font-weight: 300;">' +
-                '地区</p><p style="font-size: 32px;color: #000;font-weight: bold;">'+city+'</p></div>'
-        })
-        chart.legend(false)
-        chart.intervalStack().position('num').color('industry').tooltip('industry*percent', function (item, percent) {
-            return {
-                name: item,
-                value: percent
+        axios.get(url + '/industry/num', {
+            params: {
+                city: this.props.city
             }
-        }).style({
-            lineWidth: '3',
-            stroke: '#fff'
-        })
-        chart.render();
-        this.setState({
-            chart: chart
-        })
-    }
-
-    componentWillUpdate(nextProps, nextState, nextContext) {
-        if (this.state.chart) {
-            this.state.chart.clear()
-            this.state.chart.intervalStack().position('num').color('industry').tooltip('industry*percent', function (item, percent) {
+        }).then((resp) => {
+            const chart = new G2.Chart({
+                container: 'donut',
+                forceFit: true,
+                height: 350,
+                padding: [0, 0, 0, 0]
+            });
+            chart.source(resp.data);
+            chart.coord('theta', {
+                radius: 0.75,
+                innerRadius: 0.7
+            });
+            chart.tooltip({
+                showTitle: false,
+                itemTpl: '<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+            });
+            const city = this.props.city
+            chart.guide().html({
+                position: ['50%', '50%'],
+                htmlContent: '<div style="width: 100px;height: 50px;vertical-align: middle ;' +
+                    'text-align: center ;line-height: 0.2;">' +
+                    '<p style="font-size: 22px;color: #8c8c8c;font-weight: 300;">' +
+                    '地区</p><p style="font-size: 32px;color: #000;font-weight: bold;">' + city + '</p></div>'
+            })
+            chart.legend(false)
+            chart.intervalStack().position('num').color('industry').tooltip('industry*percent', function (item, percent) {
                 return {
                     name: item,
                     value: percent
@@ -64,21 +55,50 @@ class Donut extends React.Component {
                 lineWidth: '3',
                 stroke: '#fff'
             })
-            this.state.chart.guide().html({
-                position: ['50%', '50%'],
-                htmlContent: '<div style="width: 100px;height: 50px;vertical-align: middle ;' +
-                    'text-align: center ;line-height: 0.2;">' +
-                    '<p style="font-size: 22px;color: #8c8c8c;font-weight: 300;">' +
-                    '地区</p><p style="font-size: 32px;color: #000;font-weight: bold;">' + nextProps.city + '</p></div>'
+            chart.render();
+            this.setState({
+                chart: chart,
+                data: resp.data
             })
-            // this.state.chart.source(nextProps.data)
-            this.state.chart.changeData(nextProps.data)
-        }
+        })
+    }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.city !== this.props.city) {
+            axios.get(url + '/industry/num', {
+                params: {
+                    city: this.props.city
+                }
+            }).then((resp) => {
+                this.state.chart.clear()
+                const city = this.props.city
+                this.state.chart.guide().html({
+                    position: ['50%', '50%'],
+                    htmlContent: '<div style="width: 100px;height: 50px;vertical-align: middle ;' +
+                        'text-align: center ;line-height: 0.2;">' +
+                        '<p style="font-size: 22px;color: #8c8c8c;font-weight: 300;">' +
+                        '地区</p><p style="font-size: 32px;color: #000;font-weight: bold;">' + city + '</p></div>'
+                })
+                // this.state.chart.legend(false)
+                this.state.chart.intervalStack().position('num').color('industry').tooltip('industry*percent', function (item, percent) {
+                    return {
+                        name: item,
+                        value: percent
+                    }
+                }).style({
+                    lineWidth: '3',
+                    stroke: '#fff'
+                })
+                this.state.chart.changeData(resp.data)
+                this.setState({
+                    data: resp.data
+                })
+            })
+        }
     }
 
     render() {
-        const list = this.props.data.map((item, index) => (
+        const list = this.state.data.map((item, index) => (
             <div className="item" key={index}>
                 <span className={'dot ' + 'dot_' + (index + 1)}></span>
                 <span className="describe">{item.industry}</span>
@@ -95,7 +115,7 @@ class Donut extends React.Component {
                         </div>
                     </div>
                 </Row>
-                <Row style={{marginTop:'10px'}} type={'flex'} align={'middle'}>
+                <Row style={{marginTop: '10px'}} type={'flex'} align={'middle'}>
                     <Col span={14}>
                         <div id={'donut'} style={{marginLeft: '10px'}}>
                         </div>
