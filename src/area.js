@@ -1,5 +1,5 @@
 import React from 'react'
-import {Cascader, Row, Col, Select, Radio} from 'antd'
+import {Cascader, Row, Col, Select, Radio, Skeleton} from 'antd'
 
 import axios from 'axios'
 
@@ -34,9 +34,7 @@ class Area extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentCity: '成都',
-            polyData: [],
-            currentIndustry: '互联网'
+            currentCity: '成都'
         }
         this.changeCity = this.changeCity.bind(this)
     }
@@ -58,29 +56,8 @@ class Area extends React.Component {
     }
 
     changeCity(value) {
-        axios.get(url + '/industry/time', {
-            params: {
-                city: value[1],
-                industry: this.state.currentIndustry
-            }
-        }).then((resp) => {
-            this.setState({
-                polyData: resp.data,
-                currentCity: value[1]
-            })
-        })
-    }
-
-    componentDidMount() {
-        axios.get(url + '/industry/time', {
-            params: {
-                city: this.state.currentCity,
-                industry: this.state.currentIndustry
-            }
-        }).then((resp) => {
-            this.setState({
-                polyData: resp.data
-            })
+        this.setState({
+            currentCity: value[1]
         })
     }
 
@@ -103,36 +80,21 @@ class Area extends React.Component {
                     </div>
                     <Row gutter={20} type={'flex'} align={'middle'}>
                         <Col span={12}>
-                            <React.Suspense fallback={null}>
+                            <React.Suspense fallback={<Skeleton active/>}>
                                 <Histogram city={this.state.currentCity} data={this.state.data}/>
                             </React.Suspense>
                         </Col>
                         <Col span={12}>
-                            <React.Suspense fallback={null}>
+                            <React.Suspense fallback={<Skeleton active/>}>
                                 <Donut city={this.state.currentCity} data={this.state.donutData}/>
                             </React.Suspense>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <div style={{height: '560px', marginTop: '20px'}}>
-                                <div style={{background: '#fff'}}>
-                                    <div style={{
-                                        padding: '20px 20px 0 40px', fontSize: '25px'
-                                    }}>
-                                        {this.state.currentCity}市{this.state.currentIndustry}行业需求量变化折线图
-                                    </div>
-                                    <div style={{float: 'right', marginTop: '-30px', marginRight: '20px'}}>
-                                        {/*<Radio.Group value={this.state.currentIndustry} onChange={this.selectIndustry}>*/}
-                                        {/*    {industrySelect}*/}
-                                        {/*</Radio.Group>*/}
-                                    </div>
-                                </div>
-                                <React.Suspense fallback={null}>
-                                    <PolyLine city={this.state.currentCity} data={this.state.polyData}/>
+                                <React.Suspense fallback={<Skeleton active/>}>
+                                    <PolyLine city={this.state.currentCity}/>
                                 </React.Suspense>
-
-                            </div>
                         </Col>
                     </Row>
                 </div>
