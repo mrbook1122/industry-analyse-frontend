@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import {HashRouter as Router, Route, Link} from 'react-router-dom'
-
+import {createHashHistory} from 'history'
 import {Layout, Icon, Menu} from 'antd'
 
 import Area from './area'
@@ -9,6 +9,7 @@ import All from './all'
 import ResultList from './list'
 
 const {Header, Sider, Content} = Layout
+const history = createHashHistory()
 
 const CitySVG = () => (
     <svg viewBox="0 0 1024 1024" width="1em" height="1em" fill={'currentColor'}>
@@ -36,6 +37,7 @@ class App extends React.Component {
         });
     }
 
+
     render() {
         return (
             <div>
@@ -49,19 +51,19 @@ class App extends React.Component {
                             }}>
                             </div>
                             {/*menu*/}
-                            <Menu theme={'dark'} defaultSelectedKeys={['1']}>
+                            <Menu theme={'dark'} defaultSelectedKeys={[history.location.pathname]}>
 
-                                <Menu.Item key={1}>
+                                <Menu.Item key={'/'}>
                                     <CityIcon style={{color: '#fff'}}/>
                                     <span>地区</span>
                                     <Link to={'/'}/>
                                 </Menu.Item>
-                                <Menu.Item key={2}>
+                                <Menu.Item key={'/all'}>
                                     <Icon type="user"/>
                                     <span>nav 1</span>
                                     <Link to={'/all'}/>
                                 </Menu.Item>
-                                <Menu.Item key={3}>
+                                <Menu.Item key={'/list'}>
                                     <Icon type={'user'}/>
                                     <span>列表</span>
                                     <Link to={'/list'}/>

@@ -20,9 +20,6 @@ class Histogram extends React.Component {
     }
 
     render() {
-        // const his = this.props.data.length > 0 ? <div id={'histogram'} style={{marginTop: '30px'}}>
-        //
-        // </div> : null
         return (
             <div style={{background: '#fff', height: '450px', width: '100%', marginTop: '20px'}}>
                 <div style={{marginLeft: '20px', padding: '20px', fontSize: '25px'}}>
@@ -42,19 +39,23 @@ class Histogram extends React.Component {
                 city: this.props.city
             }
         }).then((resp) => {
-            const chart = new G2.Chart({
-                container: 'histogram',
-                forceFit: true,
-                height: 300,
-                padding: [20, 20, 95, 80]
-            });
-            chart.source(resp.data);
-            chart.scale('num', {});
-            chart.interval().position('industry*num').color('industry');
-            chart.render();
-            this.setState({
-                chart: chart
-            })
+            let chart = null
+            if (document.getElementById('histogram'))
+                chart = new G2.Chart({
+                    container: 'histogram',
+                    forceFit: true,
+                    height: 300,
+                    padding: [20, 20, 95, 80]
+                });
+            if (chart) {
+                chart.source(resp.data);
+                chart.scale('num', {});
+                chart.interval().position('industry*num').color('industry');
+                chart.render();
+                this.setState({
+                    chart: chart
+                })
+            }
         })
     }
 

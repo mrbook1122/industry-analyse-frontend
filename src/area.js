@@ -1,15 +1,9 @@
 import React from 'react'
-import {Cascader, Row, Col, Select, Radio, Skeleton} from 'antd'
-
-import axios from 'axios'
-
-// import Histogram from './histogram'
+import {Cascader, Row, Col, Skeleton} from 'antd'
 
 const Histogram = React.lazy(() => import('./histogram'))
 const Donut = React.lazy(() => import('./donut'))
 const PolyLine = React.lazy(() => import('./polyline'))
-
-const url = 'http://localhost:8080'
 
 const cityList = [
     {
@@ -39,22 +33,6 @@ class Area extends React.Component {
         this.changeCity = this.changeCity.bind(this)
     }
 
-    selectIndustry = e => {
-        const industry = e.target.value
-        axios.get(url + '/industry/time', {
-            params: {
-                city: this.state.currentCity,
-                industry: industry
-            }
-        }).then((resp) => {
-
-            this.setState({
-                currentIndustry: industry,
-                polyData: resp.data
-            })
-        })
-    }
-
     changeCity(value) {
         this.setState({
             currentCity: value[1]
@@ -63,12 +41,6 @@ class Area extends React.Component {
 
 
     render() {
-        // const industrySelect = this.state.data.map((item, index) => (
-        //     <Radio.Button value={item.industry} key={index}>{item.industry}</Radio.Button>
-        // ))
-        // let defaultSelect = ''
-        // if (this.state.data[0])
-        //     defaultSelect = this.state.data[0].industry
         return (
             <div>
                 <div style={{marginLeft: '20px', marginRight: '20px'}}>
