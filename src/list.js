@@ -28,7 +28,9 @@ class App extends React.Component {
 
     componentDidMount() {
         axios.all([
-            axios.get(url + '/city'),
+            axios.get(url + '/city', {
+                choice: 1
+            }),
             axios.get(url + '/list', {
                 params: {
                     page: this.state.page,
@@ -97,7 +99,7 @@ class App extends React.Component {
     submit = e => {
         axios.get(url + '/list', {
             params: {
-                page: this.state.page,
+                page: 1,
                 industry: this.state.industry,
                 city: this.state.city
             }

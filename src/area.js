@@ -25,7 +25,11 @@ class Area extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(url + '/city')
+        axios.get(url + '/city', {
+            params: {
+                choice: 0
+            }
+        })
             .then(resp => {
                 let cityList = resp.data.map(item => {
                     let city = {}
