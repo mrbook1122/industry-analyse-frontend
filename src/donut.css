@@ -3,31 +3,47 @@
 }
 
 .item .dot.dot_1 {
-    border-color: rgb(58, 161, 254)
+    border-color: rgb(24, 144, 255)
 }
 
 .item .dot.dot_2 {
-    border-color: rgb(54, 202, 202)
+    border-color: rgb(115, 201, 230)
 }
 
 .item .dot.dot_3 {
-    border-color: rgb(79, 203, 115)
+    border-color: rgb(19, 194, 194)
 }
 
 .item .dot.dot_4 {
-    border-color: rgb(251, 212, 55)
+    border-color: rgb(108, 217, 179)
 }
 
 .item .dot.dot_5 {
-    border-color: rgb(242, 98, 123)
+    border-color: rgb(47, 194, 91)
 }
 
 .item .dot.dot_6 {
-    border-color: rgb(151, 95, 230)
+    border-color: rgb(15, 217, 108)
 }
 
 .item .dot.dot_7 {
-    border-color: rgb(82, 84, 207)
+    border-color: rgb(250, 204, 20)
+}
+
+.item .dot.dot_8 {
+    border-color: rgb(230, 150, 92)
+}
+
+.item .dot.dot_9 {
+    border-color: rgb(240, 72, 100)
+}
+
+.item .dot.dot_10 {
+    border-color: rgb(214, 107, 202)
+}
+
+.item .dot.dot_11 {
+    border-color: rgb(133, 67, 224)
 }
 
 .item .dot {

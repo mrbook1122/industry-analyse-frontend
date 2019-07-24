@@ -6,7 +6,7 @@ import axios from 'axios'
 const {Column} = Table
 const {Option} = Select
 
-const url = 'http://localhost:8080'
+const url = ''
 
 class App extends React.Component {
 
@@ -31,7 +31,9 @@ class App extends React.Component {
             axios.get(url + '/city'),
             axios.get(url + '/list', {
                 params: {
-                    page: this.state.page
+                    page: this.state.page,
+                    industry: this.state.industry,
+                    city: this.state.city
                 }
             })
         ]).then(axios.spread((city, list) => {
@@ -53,7 +55,9 @@ class App extends React.Component {
     changePage = page => {
         axios.get(url + '/list', {
             params: {
-                page: page
+                page: page,
+                industry: this.state.industry,
+                city: this.state.city
             }
         }).then(resp => {
             this.setState({
@@ -84,6 +88,28 @@ class App extends React.Component {
         })
     }
 
+    selectIndustry = value => {
+        this.setState({
+            industry: value
+        })
+    }
+
+    submit = e => {
+        axios.get(url + '/list', {
+            params: {
+                page: this.state.page,
+                industry: this.state.industry,
+                city: this.state.city
+            }
+        }).then(resp => {
+            this.setState({
+                page: 1,
+                pages: resp.data.pages,
+                records: resp.data.records
+            })
+        })
+    }
+
     render() {
         const industries = ["IT", "金融", "贸易", "医疗", "广告媒体", "房地产",
             "教育", "服务业", "物流", "能源材料", "其他"]
@@ -98,7 +124,8 @@ class App extends React.Component {
                     }}>
                         <Col>行业</Col>
                         <Col>
-                            <Select defaultValue={this.state.industry} style={{width: '100px'}}>
+                            <Select defaultValue={this.state.industry} style={{width: '100px'}}
+                                    onChange={this.selectIndustry}>
                                 {IndustryOptions}
                             </Select>
                         </Col>
@@ -123,7 +150,7 @@ class App extends React.Component {
                             </Select>
                         </Col>
                         <Col>
-                            <Button type={'primary'}>查询</Button>
+                            <Button type={'primary'} onClick={this.submit}>查询</Button>
                         </Col>
                     </Row>
                     <Table dataSource={this.state.records} pagination={false}>
@@ -135,7 +162,7 @@ class App extends React.Component {
                         <Column align={'center'} title={'薪资(月)'} dataIndex={'salary'}/>
                     </Table>
                     <LocaleProvider locale={zh_CN}>
-                        <Pagination showQuickJumper defaultCurrent={this.state.page}
+                        <Pagination showQuickJumper current={this.state.page}
                                     total={this.state.pages * 10} onChange={this.changePage}
                                     style={{
                                         textAlign: 'right', marginRight: '15px',

@@ -4,7 +4,7 @@ import {Col, Row} from 'antd'
 import axios from 'axios'
 import './donut.css'
 
-const url = 'http://localhost:8080'
+const url = ''
 
 function convert(resp) {
     let total = 0
@@ -55,10 +55,11 @@ class Donut extends React.Component {
                 const city = this.props.city
                 chart.guide().html({
                     position: ['50%', '50%'],
-                    htmlContent: '<div style="width: 100px;height: 50px;vertical-align: middle ;' +
-                        'text-align: center ;line-height: 0.2;">' +
-                        '<p style="font-size: 22px;color: #8c8c8c;font-weight: 300;">' +
-                        '地区</p><p style="font-size: 32px;color: #000;font-weight: bold;">' + city + '</p></div>'
+                    htmlContent: '<div style="vertical-align: middle ;' +
+                        'text-align: center;">' +
+                        '<p style="font-size: 20px;color: #8c8c8c;font-weight: 300; line-height: 0.2">' +
+                        '地区</p><p style="font-size: 28px;color: #000;' +
+                        'line-height: 0.9; font-weight: bold; width: 100px">' + city + '</p></div>'
                 })
                 chart.legend(false)
                 chart.intervalStack().position('num').color('industry').tooltip('industry*percent', function (item, percent) {
@@ -91,10 +92,11 @@ class Donut extends React.Component {
                 const data = convert(resp)
                 this.state.chart.guide().html({
                     position: ['50%', '50%'],
-                    htmlContent: '<div style="width: 100px;height: 50px;vertical-align: middle ;' +
-                        'text-align: center ;line-height: 0.2;">' +
-                        '<p style="font-size: 22px;color: #8c8c8c;font-weight: 300;">' +
-                        '地区</p><p style="font-size: 32px;color: #000;font-weight: bold;">' + city + '</p></div>'
+                    htmlContent: '<div style="vertical-align: middle ;' +
+                        'text-align: center;">' +
+                        '<p style="font-size: 20px;color: #8c8c8c;font-weight: 300; line-height: 0.2">' +
+                        '地区</p><p style="font-size: 28px;color: #000;' +
+                        'line-height: 0.9; font-weight: bold; width: 100px">' + city + '</p></div>'
                 })
                 this.state.chart.intervalStack().position('num').color('industry').tooltip('industry*percent', function (item, percent) {
                     return {

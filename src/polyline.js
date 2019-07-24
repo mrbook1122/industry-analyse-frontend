@@ -3,7 +3,7 @@ import G2 from '@antv/g2'
 import {Radio} from 'antd'
 import axios from 'axios'
 
-const url = 'http://localhost:8080'
+const url = ''
 
 class PolyLine extends React.Component {
     constructor(props) {
@@ -97,7 +97,7 @@ class PolyLine extends React.Component {
                         <div style={{
                             padding: '20px 20px 0 40px', fontSize: '25px'
                         }}>
-                            {this.props.city}市{this.state.currentIndustry}行业需求量变化折线图
+                            {this.props.city}{this.state.currentIndustry}行业需求量变化折线图
                         </div>
                         <div style={{float: 'right', marginTop: '-30px', marginRight: '20px'}}>
                             <Radio.Group value={this.state.currentIndustry} onChange={this.selectIndustry}>

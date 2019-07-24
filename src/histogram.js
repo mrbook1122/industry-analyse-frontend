@@ -2,13 +2,7 @@ import React from 'react'
 import G2 from '@antv/g2'
 import axios from 'axios'
 
-const url = 'http://localhost:8080'
-
-// 定义度量
-const cols = {
-    industry: {alias: '行业'},
-    num: {alias: '需求量'}
-};
+const url = ''
 
 
 class Histogram extends React.Component {
