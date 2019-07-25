@@ -2,6 +2,8 @@ import React from 'react'
 import {Row, Col, Select, Button} from 'antd'
 import axios from 'axios'
 import './all.css'
+import Guage from './guage'
+import searchImg from './search.png'
 
 const {Option} = Select
 
@@ -49,7 +51,7 @@ class App extends React.Component {
 
     selectChoice = value => {
         this.setState({
-            choice: value === '薪资' ?  1 : 0
+            choice: value === '薪资' ? 1 : 0
         })
     }
 
@@ -122,34 +124,55 @@ class App extends React.Component {
         ))
         return (
             <>
-                <div style={{backgroundColor: '#fff', width: '680px'}}>
-                    {/*地图*/}
-                    <Row style={{marginLeft: '20px', paddingTop: '20px'}} type={'flex'}
-                         align={'middle'} gutter={8}>
-                        <Col>行业</Col>
-                        <Col>
-                            <Select defaultValue={'IT'} style={{width: '100px'}}
-                                    onChange={this.selectIndustry}>
-                                {IndustryOptions}
-                            </Select>
-                        </Col>
-                        <Col>
-                            <Select defaultValue={'需求量'} style={{width: '100px'}}
-                                    onChange={this.selectChoice}>
-                                <Option value={'需求量'}>需求量</Option>
-                                <Option value={'薪资'}>薪资</Option>
-                            </Select>
-                        </Col>
-                        <Col>
-                            <Button type={'primary'} onClick={this.submit}>查询</Button>
-                        </Col>
-                    </Row>
-                    <div className={'map-bg'} style={{
-                        width: '680px', height: '560px', position: 'relative'
-                    }}>
-                        {circles}
-                    </div>
-                </div>
+                <Row type={'flex'} gutter={28} style={{marginRight: '10px'}}>
+                    <Col span={18}>
+                        <div style={{backgroundColor: '#fff'}}>
+                            {/*地图*/}
+                            <Row style={{marginLeft: '20px', paddingTop: '20px'}} type={'flex'}
+                                 align={'middle'} gutter={8}>
+                                <Col>行业</Col>
+                                <Col>
+                                    <Select defaultValue={'IT'} style={{width: '100px'}}
+                                            onChange={this.selectIndustry}>
+                                        {IndustryOptions}
+                                    </Select>
+                                </Col>
+                                <Col>
+                                    <Select defaultValue={'需求量'} style={{width: '100px'}}
+                                            onChange={this.selectChoice}>
+                                        <Option value={'需求量'}>需求量</Option>
+                                        <Option value={'薪资'}>薪资</Option>
+                                    </Select>
+                                </Col>
+                                <Col>
+                                    <Button type={'primary'} onClick={this.submit}>查询</Button>
+                                </Col>
+                            </Row>
+                            <div className={'map-bg'} style={{
+                                height: '840px', position: 'relative'
+                            }}>
+                                {circles}
+                            </div>
+                        </div>
+                    </Col>
+                    <Col span={6}>
+                        <div style={{background: '#fff'}}>
+                            <div style={{fontSize: '24px', marginLeft: '20px', paddingTop: '10px'}}>
+                                服务器负载
+                            </div>
+                            <hr style={{borderColor: '#f6f6f6'}}/>
+                            <Guage/>
+                        </div>
+                        <div style={{background: '#fff', marginTop: '20px'}}>
+                            <div style={{fontSize: '24px', marginLeft: '20px', paddingTop: '10px'}}>
+                                热门搜索
+                            </div>
+                            <hr style={{borderColor: '#f6f6f6'}}/>
+                            <div className={'search'} style={{height: '300px'}}>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
             </>
         )
     }

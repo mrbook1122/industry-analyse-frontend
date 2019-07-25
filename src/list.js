@@ -29,7 +29,9 @@ class App extends React.Component {
     componentDidMount() {
         axios.all([
             axios.get(url + '/city', {
-                choice: 1
+                params: {
+                    choice: 1
+                }
             }),
             axios.get(url + '/list', {
                 params: {
