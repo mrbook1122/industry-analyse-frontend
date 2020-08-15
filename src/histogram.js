@@ -1,5 +1,5 @@
 import React from 'react'
-import G2 from '@antv/g2'
+import {Chart} from '@antv/g2'
 import axios from 'axios'
 
 const url = ''
@@ -35,7 +35,7 @@ class Histogram extends React.Component {
         }).then((resp) => {
             let chart = null
             if (document.getElementById('histogram'))
-                chart = new G2.Chart({
+                chart = new Chart({
                     container: 'histogram',
                     forceFit: true,
                     height: 300,

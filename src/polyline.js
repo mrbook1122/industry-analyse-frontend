@@ -1,5 +1,5 @@
 import React from 'react'
-import G2 from '@antv/g2'
+import {Chart} from '@antv/g2'
 import {Radio} from 'antd'
 import axios from 'axios'
 
@@ -40,7 +40,7 @@ class PolyLine extends React.Component {
         }).then((resp) => {
             let chart = null
             if (document.getElementById('polyline'))
-                chart = new G2.Chart({
+                chart = new Chart({
                     container: 'polyline',
                     forceFit: true,
                     height: 450,

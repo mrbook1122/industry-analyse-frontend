@@ -1,11 +1,11 @@
 import React from 'react'
-import G2 from '@antv/g2'
+import {Chart, Shape} from '@antv/g2'
 
 class Guage extends React.Component {
 
     componentDidMount() {
         if (document.getElementById('guage')) {
-            let Shape = G2.Shape;
+            let Shape = Shape;
             // 自定义Shape 部分
             Shape.registerShape('point', 'pointer', {
                 drawShape: function drawShape(cfg, group) {
@@ -41,7 +41,7 @@ class Guage extends React.Component {
             let data = [{
                 value: 5.6
             }];
-            let chart = new G2.Chart({
+            let chart = new Chart({
                 container: 'guage',
                 forceFit: true,
                 height: 300,

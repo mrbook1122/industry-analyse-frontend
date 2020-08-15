@@ -1,5 +1,5 @@
 .map-bg {
-    background: url("./map.png") no-repeat center;
+    background: url("assets/map.png") no-repeat center;
     background-size: 90%;
 }
 
@@ -36,6 +36,6 @@
 
 
 .search {
-    background: url("./search.png") no-repeat center;
+    background: url("assets/search.png") no-repeat center;
     background-size: cover;
 }

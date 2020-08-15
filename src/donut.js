@@ -1,5 +1,5 @@
 import React from 'react'
-import G2 from '@antv/g2'
+import {Chart} from '@antv/g2'
 import {Col, Row} from 'antd'
 import axios from 'axios'
 import './donut.css'
@@ -35,7 +35,7 @@ class Donut extends React.Component {
         }).then((resp) => {
             let chart = null
             if (document.getElementById('donut'))
-                chart = new G2.Chart({
+                chart = new Chart({
                     container: 'donut',
                     forceFit: true,
                     height: 350,

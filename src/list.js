@@ -1,6 +1,5 @@
 import React from 'react'
-import {Table, Pagination, LocaleProvider, Row, Col, Select, Button} from 'antd'
-import zh_CN from 'antd/lib/locale-provider/zh_CN'
+import {Button, Col, Pagination, Row, Select, Table} from 'antd'
 import axios from 'axios'
 
 const {Column} = Table
@@ -165,14 +164,12 @@ class App extends React.Component {
                         <Column align={'center'} title={'城市'} dataIndex={'city'}/>
                         <Column align={'center'} title={'薪资(月)'} dataIndex={'salary'}/>
                     </Table>
-                    <LocaleProvider locale={zh_CN}>
-                        <Pagination showQuickJumper current={this.state.page}
-                                    total={this.state.pages * 10} onChange={this.changePage}
-                                    style={{
-                                        textAlign: 'right', marginRight: '15px',
-                                        marginTop: '20px', paddingBottom: '20px'
-                                    }}/>
-                    </LocaleProvider>
+                    <Pagination showQuickJumper current={this.state.page}
+                                total={this.state.pages * 10} onChange={this.changePage}
+                                style={{
+                                    textAlign: 'right', marginRight: '15px',
+                                    marginTop: '20px', paddingBottom: '20px'
+                                }}/>
                 </div>
             </>
         )

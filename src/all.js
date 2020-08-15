@@ -3,7 +3,7 @@ import {Row, Col, Select, Button} from 'antd'
 import axios from 'axios'
 import './all.css'
 import Guage from './guage'
-import searchImg from './search.png'
+import searchImg from './assets/search.png'
 
 const {Option} = Select
 
@@ -112,7 +112,7 @@ class App extends React.Component {
                         position: 'absolute', left: item.x + '%', top: item.y + '%',
                         background: color, width: radius * 2 + 'px', height: radius * 2 + 'px',
                         borderRadius: radius, border: '1.3px solid ' + color
-                    }} key={index} className={'animated zoomIn'}></div>
+                    }} key={index} className={'animated zoomIn'}/>
                 )
             })
         }
@@ -161,7 +161,7 @@ class App extends React.Component {
                                 服务器负载
                             </div>
                             <hr style={{borderColor: '#f6f6f6'}}/>
-                            <Guage/>
+                            {/*<Guage/>*/}
                         </div>
                         <div style={{background: '#fff', marginTop: '20px'}}>
                             <div style={{fontSize: '24px', marginLeft: '20px', paddingTop: '10px'}}>
