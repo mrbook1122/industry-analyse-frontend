@@ -27,7 +27,7 @@ const CityPage = () => {
                 <Histogram fullPage={fullPage}/>
             </div>
             <div className="section">
-                <Polyline/>
+                <Polyline fullPage={fullPage}/>
             </div>
         </div>
     )

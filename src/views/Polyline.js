@@ -6,7 +6,15 @@ import {Chart} from "@antv/g2";
 import Spinner from "../components/Spinner";
 
 // 折线图
-const Polyline = () => {
+const Polyline = ({fullPage}) => {
+
+    const closeScroll = () => {
+        fullPage.setAllowScrolling(false)
+    }
+    const openScroll = () => {
+        fullPage.setAllowScrolling(true)
+    }
+
     const [chart, setChart] = useState(null)
     // 初始化图表
     useEffect(() => {
@@ -31,6 +39,7 @@ const Polyline = () => {
     const [cityList, setCityList] = useState([])
     const changeCity = (value) => {
         setCity(value[1])
+        openScroll()
     }
     // 获取城市列表
     useEffect(() => {
@@ -65,6 +74,7 @@ const Polyline = () => {
     const [industry, setIndustry] = useState(industries[0])
     const changeIndustry = (value) => {
         setIndustry(value)
+        openScroll()
     }
 
     const [loading, setLoading] = useState(true)
@@ -98,13 +108,16 @@ const Polyline = () => {
                 <div className="flex items-center">
                     <div className="text-xl">城市选择：</div>
                     <Cascader defaultValue={['四川', '成都']} onChange={changeCity}
+                              onClick={closeScroll}
+                              onBlur={openScroll}
                               options={cityList}/>
                 </div>
                 <div className="flex items-center">
                     <div className="text-xl">行业选择：</div>
                     <Select value={industry} style={{width: '120px'}}
                             onSelect={changeIndustry}
-                            onClick={() => console.log('a')}>
+                            onBlur={openScroll}
+                            onFocus={closeScroll}>
                         {industries.map(item => <Select.Option value={item} key={item}>{item}</Select.Option>)}
                     </Select>
                 </div>
