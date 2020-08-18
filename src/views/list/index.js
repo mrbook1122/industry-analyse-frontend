@@ -5,7 +5,7 @@ import axios from 'axios'
 const {Column} = Table
 const {Option} = Select
 
-class App extends React.Component {
+class ListPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -19,18 +19,19 @@ class App extends React.Component {
             city: '成都',
             salary: '',
             provinceList: [],
-            cityList: []
+            cityList: [],
+            loading: true
         }
     }
 
     componentDidMount() {
         axios.all([
-            axios.get(url + '/city', {
+            axios.get('/city', {
                 params: {
                     choice: 1
                 }
             }),
-            axios.get(url + '/list', {
+            axios.get('/list', {
                 params: {
                     page: this.state.page,
                     industry: this.state.industry,
@@ -48,13 +49,18 @@ class App extends React.Component {
                 provinceList: city.data,
                 pages: list.data.pages,
                 records: list.data.records,
-                cityList: cityList
+                cityList: cityList,
+                loading: false
             })
         }))
     }
 
     changePage = page => {
-        axios.get(url + '/list', {
+        this.setState({
+            loading: true,
+            page
+        })
+        axios.get('/list', {
             params: {
                 page: page,
                 industry: this.state.industry,
@@ -62,8 +68,7 @@ class App extends React.Component {
             }
         }).then(resp => {
             this.setState({
-                page: page,
-                pages: resp.data.pages,
+                loading: false,
                 records: resp.data.records
             })
         })
@@ -96,6 +101,9 @@ class App extends React.Component {
     }
 
     submit = e => {
+        this.setState({
+            loading: true
+        })
         axios.get('/list', {
             params: {
                 page: 1,
@@ -106,7 +114,8 @@ class App extends React.Component {
             this.setState({
                 page: 1,
                 pages: resp.data.pages,
-                records: resp.data.records
+                records: resp.data.records,
+                loading: false
             })
         })
     }
@@ -119,7 +128,7 @@ class App extends React.Component {
         ))
         return (
             <>
-                <div style={{background: '#fff', marginRight: '20px'}}>
+                <div className="mx-64 pt-24">
                     <Row type={'flex'} align={'middle'} gutter={20} style={{
                         marginLeft: '15px', paddingTop: '20px', paddingBottom: '20px'
                     }}>
@@ -154,7 +163,7 @@ class App extends React.Component {
                             <Button type={'primary'} onClick={this.submit}>查询</Button>
                         </Col>
                     </Row>
-                    <Table dataSource={this.state.records} pagination={false}>
+                    <Table dataSource={this.state.records} pagination={false} loading={this.state.loading}>
                         <Column align={'center'} title={'序号'} dataIndex={'key'} key={'key'}/>
                         <Column align={'center'} title={'行业'} dataIndex={'industry'}/>
                         <Column align={'center'} title={'职业'} dataIndex={'job'}/>
@@ -174,4 +183,4 @@ class App extends React.Component {
     }
 }
 
-export default App
+export default ListPage

@@ -9,6 +9,7 @@ import './index.css'
 import Nav from "./Nav";
 import CityPage from "./city";
 import All from "./all";
+import ListPage from "./list";
 
 const App = () => {
 
@@ -17,7 +18,7 @@ const App = () => {
             <Nav/>
             <Switch>
                 <Route path={'/list'}>
-
+                    <ListPage/>
                 </Route>
                 <Route path={'/all'}>
                     <All/>
