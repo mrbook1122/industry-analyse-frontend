@@ -1,0 +1,9 @@
+.nav {
+
+}
+
+@media (min-height: 550px) {
+    .nav {
+        right: 70px;
+    }
+}

@@ -11,50 +11,19 @@ function convert(resp) {
         total += resp.data[i].num
     }
     return resp.data.map(item => {
-        console.log(typeof item.num)
         item.percent = Number.parseFloat((item.num / total).toFixed(2))
         return item
     })
 }
 
-// 柱状图
-const Histogram = () => {
+// 柱状图和饼状图
+const Histogram = ({fullPage}) => {
 
-
-
-    const [city, setCity] = useState('成都')
-    const [cityList, setCityList] = useState([])
-    const changeCity = (value) => {
-        setCity(value[1])
-    }
-    useEffect(() => {
-        axios.get('/city', {
-            params: {
-                choice: 0
-            }
-        }).then(resp => {
-            let cityList = resp.data.map(item => {
-                let city = {}
-                city.value = item.province
-                city.label = item.province
-                if (item.cities.length === 0) {
-                    city.children = [{value: item.province, label: item.province}]
-                } else {
-                    city.children = item.cities.map(i => {
-                        return {
-                            value: i,
-                            label: i
-                        }
-                    })
-                }
-                return city
-            })
-            setCityList(cityList)
-        })
-    }, [])
-
-
-    const [donut, setDonut] = useState(null)
+    const [chart, setChart] = useState({
+        histogram: null,
+        donut: null
+    })
+    // 初始化图表
     useEffect(() => {
         let donut = new Chart({
             container: 'donut',
@@ -85,70 +54,91 @@ const Histogram = () => {
                 }
             })
         donut.interaction('element-active');
-        setDonut(donut)
-    }, [])
-    useEffect(() => {
-        if (donut !== null) {
-            axios.get('/industry/num', {
-                params: {
-                    city: '成都'
-                }
-            }).then(resp => {
-                let data = convert(resp)
-                console.log(data)
-                donut.data(data)
-                donut.render()
-            })
-        }
-    }, [donut])
 
-    const [chart, setChart] = useState(null)
-    useEffect(() => {
         let chart = new Chart({
             container: 'histogram',
             autoFit: true
         });
-        setChart(chart)
+        chart.scale('num', {});
+        chart.interval().position('industry*num').color('industry');
+        setChart({
+            histogram: chart,
+            donut,
+        })
     }, [])
+
+    const [city, setCity] = useState('成都')
+    const [cityList, setCityList] = useState([])
+    const changeCity = (value) => {
+        fullPage.setAllowScrolling(true)
+        setCity(value[1])
+    }
+    // 获取城市列表
     useEffect(() => {
-        if (chart !== null) {
+        axios.get('/city', {
+            params: {
+                choice: 0
+            }
+        }).then(resp => {
+            let cityList = resp.data.map(item => {
+                let city = {}
+                city.value = item.province
+                city.label = item.province
+                if (item.cities.length === 0) {
+                    city.children = [{value: item.province, label: item.province}]
+                } else {
+                    city.children = item.cities.map(i => {
+                        return {
+                            value: i,
+                            label: i
+                        }
+                    })
+                }
+                return city
+            })
+            setCityList(cityList)
+        })
+    }, [])
+
+    // ajax获取数据
+    useEffect(() => {
+        if (chart.histogram !== null) {
             axios.get('/industry/num', {
                 params: {
-                    city: '成都'
+                    city
                 }
             }).then(resp => {
-                chart.data(resp.data)
-                chart.scale('num', {});
-                chart.interval().position('industry*num').color('industry');
-                chart.render()
+                chart.histogram.data(resp.data)
+                chart.histogram.render()
+                let data = convert(resp)
+                chart.donut.data(data)
+                chart.donut.render()
             })
         }
-        // tempChart.source(resp.data);
-
-        // tempChart.render()
-        // setChart(chart)
-        // chart.render();
-    }, [chart])
+    }, [chart, city])
 
     // 饼状图与柱状图切换, true为饼状图
     const [select, setSelect] = useState(false)
     const onTabClick = (key) => {
         setSelect(key === '2')
         setTimeout(() => {
-            chart.render()
-            donut.render()
+            chart.histogram.render()
+            chart.donut.render()
         }, 500)
     }
 
     return (
         <div className="h-full">
             <div className="xl:text-5xl lg:text-3xl md:text-2xl text-xl mt-40 text-center">
-                <span className="text-red-300">成都市</span>各行业需求量数据报告
+                <span className="text-red-300">{city}市</span>各行业需求量数据报告
             </div>
-            <div className="flex justify-between xl:w-1/3 md:w-1/2 mx-auto my-5 items-center">
+            <div
+                className="flex sm:justify-between justify-around xl:w-1/3 md:w-1/2 mx-auto my-5 items-center sm:flex-no-wrap flex-wrap">
                 <div className="flex items-center">
                     <div className="text-xl">城市选择：</div>
                     <Cascader defaultValue={['四川', '成都']} onChange={changeCity}
+                              onClick={() => fullPage.setAllowScrolling(false)}
+                              onBlur={() => fullPage.setAllowScrolling(true)}
                               options={cityList}/>
                 </div>
                 <div>
