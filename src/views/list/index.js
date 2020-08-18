@@ -128,7 +128,7 @@ class ListPage extends React.Component {
         ))
         return (
             <>
-                <div className="mx-64 pt-24">
+                <div className="xl:mx-64 pt-24">
                     <Row type={'flex'} align={'middle'} gutter={20} style={{
                         marginLeft: '15px', paddingTop: '20px', paddingBottom: '20px'
                     }}>
